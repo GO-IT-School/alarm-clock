@@ -6,12 +6,12 @@ import winsound
 
 con = sqlite3.connect("tutorial.db")
 cur = con.cursor()
-con.execute("""CREATE TABLE IF NOT EXISTS data2 (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, hours INTEGER NOT NULL, minutes INTEGER NOT NULL, seconds INTEGER NOT NULL)""")
+con.execute("""CREATE TABLE IF NOT EXISTS data (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, hours INTEGER NOT NULL, minutes INTEGER NOT NULL, seconds INTEGER NOT NULL)""")
 con.commit()
 con.close()
-# cur.execute("CREATE TABLE data(title, year, score)")
 
-# Функція яка свіряє введену дата з глобальной датой
+
+# Функція яка свіряє введену дату з глобальной датой та записує в базу даних
 def alarm(set_alarm_timer):
     sc = sec.get()
     hr = hour.get()
@@ -19,7 +19,7 @@ def alarm(set_alarm_timer):
     con = sqlite3.connect("tutorial.db")
     cur = con.cursor()
     my_data = (hr,mn,sc)
-    my = "INSERT INTO data2 (hours, minutes, seconds) VALUES (?,?,?)"
+    my = "INSERT INTO data (hours, minutes, seconds) VALUES (?,?,?)"
     con.execute(my,my_data)
     con.commit()
     con.close()
