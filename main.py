@@ -4,7 +4,7 @@ import datetime
 import time
 import winsound
 
-con = sqlite3.connect("tutorial.db")
+con = sqlite3.connect("baza.db")
 cur = con.cursor()
 con.execute("""CREATE TABLE IF NOT EXISTS data (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, hours INTEGER NOT NULL, minutes INTEGER NOT NULL, seconds INTEGER NOT NULL)""")
 con.commit()
@@ -16,7 +16,7 @@ def alarm(set_alarm_timer):
     sc = sec.get()
     hr = hour.get()
     mn = min.get()
-    con = sqlite3.connect("tutorial.db")
+    con = sqlite3.connect("baza.db")
     cur = con.cursor()
     my_data = (hr,mn,sc)
     my = "INSERT INTO data (hours, minutes, seconds) VALUES (?,?,?)"
