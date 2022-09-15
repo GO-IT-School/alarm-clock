@@ -50,9 +50,7 @@ def actual_time():
     record = cur.fetchone()
     con.commit()
     con.close()
-    print(record[1],":",record[2],":",record[3])
     set_alarm_timer = '{}:{}:{}'.format(record[1],record[2],record[3])
-    print(set_alarm_timer)
     alarm(set_alarm_timer)
 
 #Интерфейс
