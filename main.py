@@ -4,23 +4,21 @@ import datetime
 import time
 import winsound
 
-con = sqlite3.connect("baza.db")
+
+con = sqlite3.connect("tutorial.db")
 cur = con.cursor()
 con.execute("""CREATE TABLE IF NOT EXISTS data (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, hours INTEGER NOT NULL, minutes INTEGER NOT NULL, seconds INTEGER NOT NULL)""")
 con.commit()
 con.close()
 
 
-# Функція яка свіряє введену дату з глобальной датой та записує в базу даних
+# Функція яка свіряє введену дата з глобальной датой
 def alarm(set_alarm_timer):
-    sc = sec.get()
-    hr = hour.get()
-    mn = min.get()
-    con = sqlite3.connect("baza.db")
+    con = sqlite3.connect("tutorial.db")
     cur = con.cursor()
-    my_data = (hr,mn,sc)
-    my = "INSERT INTO data (hours, minutes, seconds) VALUES (?,?,?)"
-    con.execute(my,my_data)
+    sqlite_select_query = """SELECT * FROM data ORDER BY ROWID DESC"""
+    cur.execute(sqlite_select_query)
+    record = cur.fetchone()
     con.commit()
     con.close()
     while True:
@@ -35,7 +33,26 @@ def alarm(set_alarm_timer):
                 break
 # Функція яка приймає данні 
 def actual_time():
-    set_alarm_timer = f"{hour.get()}:{min.get()}:{sec.get()}"
+    sc = sec.get()
+    hr = hour.get()
+    mn = min.get()
+    con = sqlite3.connect("tutorial.db")
+    cur = con.cursor()
+    my_data = (hr,mn,sc)
+    my = "INSERT INTO data (hours, minutes, seconds) VALUES (?,?,?)"
+    con.execute(my,my_data)
+    con.commit()
+    con.close()
+    con = sqlite3.connect("tutorial.db")
+    cur = con.cursor()
+    sqlite_select_query = """SELECT * FROM data ORDER BY ROWID DESC"""
+    cur.execute(sqlite_select_query)
+    record = cur.fetchone()
+    con.commit()
+    con.close()
+    print(record[1],":",record[2],":",record[3])
+    set_alarm_timer = '{}:{}:{}'.format(record[1],record[2],record[3])
+    print(set_alarm_timer)
     alarm(set_alarm_timer)
 
 #Интерфейс
@@ -43,7 +60,7 @@ clock = Tk()
 clock.title("DataFlair Alarm Clock")
 clock.geometry("400x200")
 
-addTime = Label(clock,text = "Hour   Min   Sec",font=60).place(x = 100)
+addTime = Label(clock,text = "Hour   Min   Sec",font=60).place(x = 110)
 
 hour = StringVar()
 min = StringVar()
@@ -51,11 +68,11 @@ sec = StringVar()
 
 
 
-hourTime= Entry(clock,textvariable = hour,bg = "white",width = 15).place(x=90,y=30)
-minTime= Entry(clock,textvariable = min,bg = "white",width = 15).place(x=130,y=30)
-secTime = Entry(clock,textvariable = sec,bg = "white",width = 15).place(x=170,y=30)
+hourTime= Entry(clock,textvariable = hour,bg = "white",width = 5).place(x=110,y=30)
+minTime= Entry(clock,textvariable = min,bg = "white",width = 5).place(x=150,y=30)
+secTime = Entry(clock,textvariable = sec,bg = "white",width = 5).place(x=190,y=30)
 
 
-submit = Button(clock,text = "Set Alarm",fg="black",width = 10,command = actual_time).place(x =145,y=70)
+submit = Button(clock,text = "Set Alarm",fg="black",width = 10,command = actual_time).place(x =120,y=70)
 
 clock.mainloop()
