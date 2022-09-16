@@ -15,14 +15,18 @@ win2.configure(bg='#010502')
 win2.title('Alarms')
 lbl_date = Label(font='Franklin 30', bg='#010502', fg = 'white')
 lbl_time = Label(font='Franklin 30', bg='#010502', fg = 'white')
-h = Entry(width=3, font=('Arial 24')) 
-m = Entry(width=3, font=('Arial 24')) 
-s = Entry(width=3, font=('Arial 24'))
+hour = Entry(width=3, font=('Arial 24')) 
+minute = Entry(width=3, font=('Arial 24')) 
+second = Entry(width=3, font=('Arial 24'))
+dot = Label(font='Franklin 30', bg='#010502', fg = 'white', text=":")
+dot2 = Label(font='Franklin 30', bg='#010502', fg = 'white', text=":")
 lbl_date.grid(row=0, column=1)   
 lbl_time.grid(row=2, column=1)
-h.grid(row=3, column=0)
-m.grid(row=3, column=1)
-s.grid(row=3, column=2) 
+hour.grid(row=3, column=0)
+dot.place(x=85, y=90)
+dot2.place(x=220, y=90)
+minute.grid(row=3, column=1)
+second.grid(row=3, column=2) 
 
 
 def data_update():  
@@ -38,18 +42,18 @@ def time_update():
         sleep(0.5)
 
 
-my_canvas = Canvas(win2, bg='#010502', width=190)
-my_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+my_canvas = Canvas(win2, bg='#010502', width = 300)
+my_canvas.grid(row=5, column=1)
 
 
 
 def alarm():
-    a = h.get()
-    b = m.get() 
-    c = s.get()
+    get_hour = hour.get()
+    get_minute = minute.get() 
+    get_second = second.get()
     frame = Frame(my_canvas, bg='#010502', highlightbackground="white", highlightthickness=1)
     frame.pack()
-    Label(frame, text=f"{a}:{b}:{c}",
+    Label(frame, text=f"{get_hour}:{get_minute}:{get_second}",
     font = 10,
     bg='#010502',
     fg = 'white').pack()
@@ -76,7 +80,7 @@ def alarm():
     
        
 
-button = Button(text="Зберегти",
+save_button = Button(text="Зберегти",
     width=15,
     height=1,
     bg='#010502',
@@ -84,11 +88,11 @@ button = Button(text="Зберегти",
     font = 'Franklin 17',
     command=alarm
     ) 
-button.grid(row=4, column=1)
+save_button.grid(row=4, column=1)
 
-process = threading.Thread(target=time_update)  
-process.start()  
-process2 = threading.Thread(target=data_update) 
-process2.start() 
+time_process = threading.Thread(target=time_update)  
+time_process.start()  
+data_process = threading.Thread(target=data_update) 
+data_process.start() 
 
 win.mainloop()
