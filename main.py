@@ -3,6 +3,7 @@ from tkinter import *
 import datetime
 import time
 import winsound
+from threading import Thread
 
 
 con = sqlite3.connect("tutorial.db")
@@ -10,6 +11,29 @@ cur = con.cursor()
 con.execute("""CREATE TABLE IF NOT EXISTS data (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, hours INTEGER NOT NULL, minutes INTEGER NOT NULL, seconds INTEGER NOT NULL)""")
 con.commit()
 con.close()
+clock = Tk()
+def interface():
+    global hour
+    global min
+    global sec
+    clock.title("DataFlair Alarm Clock")
+    clock.geometry("400x200")
+
+    addTime = Label(clock,text = "Hour   Min   Sec",font=60).place(x = 110)
+
+    hour = StringVar()
+    min = StringVar()
+    sec = StringVar()
+
+
+
+    hourTime= Entry(clock,textvariable = hour,bg = "white",width = 5).place(x=110,y=30)
+    minTime= Entry(clock,textvariable = min,bg = "white",width = 5).place(x=150,y=30)
+    ecTime = Entry(clock,textvariable = sec,bg = "white",width = 5).place(x=190,y=30)
+
+
+    submit = Button(clock,text = "Set Alarm",fg="black",width = 10,command = actual_time).place(x =120,y=70)
+
 
 
 # Функція яка свіряє введену дата з глобальной датой
@@ -53,24 +77,16 @@ def actual_time():
     set_alarm_timer = '{}:{}:{}'.format(record[1],record[2],record[3])
     alarm(set_alarm_timer)
 
-#Интерфейс
-clock = Tk()
-clock.title("DataFlair Alarm Clock")
-clock.geometry("400x200")
-
-addTime = Label(clock,text = "Hour   Min   Sec",font=60).place(x = 110)
-
-hour = StringVar()
-min = StringVar()
-sec = StringVar()
 
 
+th2= Thread(target=alarm, args=())
 
-hourTime= Entry(clock,textvariable = hour,bg = "white",width = 5).place(x=110,y=30)
-minTime= Entry(clock,textvariable = min,bg = "white",width = 5).place(x=150,y=30)
-secTime = Entry(clock,textvariable = sec,bg = "white",width = 5).place(x=190,y=30)
+th = Thread(target=actual_time, args=())
 
+th3 = Thread(target=interface, args=())
+th3.start()
+th.start()
+th2.start()
 
-submit = Button(clock,text = "Set Alarm",fg="black",width = 10,command = actual_time).place(x =120,y=70)
-
+interface()
 clock.mainloop()
